@@ -29,10 +29,11 @@ def download_stats(projname: str) -> pandas.DataFrame:
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("projname", help="PyPi project name")
+    p.add_argument("-w", "--window", help="time window to average over (weeks)", type=int, default=1)
     P = p.parse_args()
 
     dat = download_stats(P.projname)
-    weekly_all = dat.resample("1W").sum()
+    weekly_all = dat.resample(f"{P.window}W").sum()
     weekly = weekly_all[["3.5", "3.6", "3.7", "3.8", "3.9"]]
     total = weekly.sum(axis=1)
     normed = (weekly.T / total).T
@@ -40,8 +41,9 @@ if __name__ == "__main__":
     fg = figure()
     axs = fg.subplots(2, 1, sharex=True)
     normed.plot(ax=axs[0])
-    axs[0].set_title(f"{P.projname}: PyPi downloads by Python version (pypistats.org)")
-    axs[0].set_ylabel("weekly download (normalized)")
+    axs[0].set_title(f"{P.projname}: PyPi downloads by Python version (pypistats.org): {P.window} week average")
+    axs[0].set_ylabel("normalized downloads")
+    axs[0].legend(loc="center left")
 
     lost = normed["3.5"]
     current = normed[["3.6", "3.7", "3.8", "3.9"]].sum(axis=1)
@@ -49,8 +51,7 @@ if __name__ == "__main__":
     ax = axs[1]
     current.plot(ax=ax, label="3.6..3.9")
     lost.plot(ax=ax, label="3.5")
-    ax.set_title(f"{P.projname}: PyPi downloads by Python version (pypistats.org)")
-    ax.set_ylabel("weekly download (normalized)")
-    ax.legend()
+    ax.set_ylabel("normalized downloads")
+    ax.legend(loc="center left")
 
     show()
