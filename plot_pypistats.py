@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+Plots Python package stats by Python version.
+"""
 import pypistats as ps
 from matplotlib.pyplot import figure, show
 import argparse
@@ -29,26 +32,25 @@ if __name__ == "__main__":
     P = p.parse_args()
 
     dat = download_stats(P.projname)
-    weekly = dat.resample("1W").sum()
+    weekly_all = dat.resample("1W").sum()
+    weekly = weekly_all[["3.5", "3.6", "3.7", "3.8", "3.9"]]
+    total = weekly.sum(axis=1)
+    normed = (weekly.T / total).T
 
-    fg = figure(1)
-    fg.clf()
-    ax = fg.gca()
-    weekly.plot(ax=ax)
-    ax.set_title("Meson: PyPi downloads by Python version (pypistats.org)")
-    ax.set_ylabel("weekly downloads")
+    fg = figure()
+    axs = fg.subplots(2, 1, sharex=True)
+    normed.plot(ax=axs[0])
+    axs[0].set_title(f"{P.projname}: PyPi downloads by Python version (pypistats.org)")
+    axs[0].set_ylabel("weekly download (normalized)")
 
-    lost = weekly["3.5"]
-    current = weekly[["3.6", "3.7", "3.8", "3.9"]].sum(axis=1)
+    lost = normed["3.5"]
+    current = normed[["3.6", "3.7", "3.8", "3.9"]].sum(axis=1)
 
-    fg2 = figure(2)
-    fg2.clf()
-    ax = fg2.gca()
-    ax.plot(current, label="3.6..3.9")
-    ax.plot(lost, label="3.5")
-    ax.set_title("Meson: PyPi downloads by Python version (pypistats.org)")
-    ax.set_ylabel("weekly downloads")
-    ax.grid(True)
+    ax = axs[1]
+    current.plot(ax=ax, label="3.6..3.9")
+    lost.plot(ax=ax, label="3.5")
+    ax.set_title(f"{P.projname}: PyPi downloads by Python version (pypistats.org)")
+    ax.set_ylabel("weekly download (normalized)")
     ax.legend()
 
     show()
