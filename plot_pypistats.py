@@ -74,11 +74,11 @@ if __name__ == "__main__":
     P = p.parse_args()
 
     if P.old < 3.4:
-        v = np.around(np.arange(P.old, 2.8, 0.1), 1)
+        v = np.around(np.arange(P.old, 2.7 + 0.1, 0.1), 1)
         if P.new > 3.4:
-            v = np.append(v, np.around(np.arange(3.5, P.new, 0.1), 1))
+            v = np.append(v, np.around(np.arange(3.5, P.new + 0.1, 0.1), 1))
     else:
-        v = np.around(np.arange(P.old, P.new, 0.1), 1)
+        v = np.around(np.arange(P.old, P.new + 0.1, 0.1), 1)
 
     versions = v.astype(str)
 
