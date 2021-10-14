@@ -49,7 +49,7 @@ def plot_trends(normed: pandas.DataFrame, versions: list[str]):
     axs = fg.subplots(2, 1, sharex=True)
     normed.plot(ax=axs[0])
     axs[0].set_title(
-        f"{normed.attrs['project_name']}: PyPi downloads by Python version (pypistats.org): {normed.attrs['window']} week average"
+        f"{normed.attrs['project_name']}: PyPI downloads by Python version (pypistats.org): {normed.attrs['window']} week average"
     )
     axs[0].set_ylabel("normalized downloads")
     axs[0].legend(loc="center left")
@@ -66,7 +66,7 @@ def plot_trends(normed: pandas.DataFrame, versions: list[str]):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("projname", help="PyPi project name")
+    p.add_argument("projname", help="PyPI project name")
     p.add_argument(
         "-w", "--window", help="time window to average over (weeks)", type=int, default=1
     )
