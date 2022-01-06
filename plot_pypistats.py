@@ -75,7 +75,7 @@ if __name__ == "__main__":
         "--versions",
         help="Python minor versions to consider",
         nargs="+",
-        default=["3.5", "3.6", "3.7", "3.8", "3.9", "3.10"],
+        default=["3.6", "3.7", "3.8", "3.9", "3.10"],
     )
     P = p.parse_args()
 
